@@ -1,0 +1,13 @@
+body {
+    margin: 2%;
+}
+.navBar{
+    width: 100%;
+}
+.highScores{
+    color: blueviolet;
+    float: left;
+}
+.timeText{
+    float: right;
+}
