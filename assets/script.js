@@ -9,7 +9,10 @@ const finalPage = document.getElementById('finalPage');
 const questionElement = document.getElementById('question');
 const answerButtonElement = document.getElementById('answerButtons');
 
+
 let shuffledQuestions, currentQuestionIndex;
+let response = document.getElementById("response");
+
 
 //             FUNCTIONS             //
 //this function will display the questions and answers based onClick
@@ -29,6 +32,7 @@ function startQuiz(){
 
 //this will set the question based on an array of shuffled questions
 function setNextQuestion(){
+  resetState();
   showQuestion(shuffledQuestions[currentQuestionIndex])
 }
 
@@ -36,21 +40,42 @@ function setNextQuestion(){
 function showQuestion(question){
   questionElement.innerText = question.question;
   question.answers.forEach(answer => {
-  const button = document.createElement('button');
-  button.innerText = answer.text;
-  button.classList.add('answerBtn')
+    const button = document.createElement('button');
+    button.innerText = answer.text;
+    button.classList.add('answerBtn')
   if(answer.correct){
     //add code here
+    button.dataset.correct = answer.correct;
   }
-  button.addEventListener('click', nextSet)
+  button.addEventListener('click', selectAnswer);
+  answerButtonElement.appendChild(button);
   });
 }
+//clears everything out
+function resetState(){
+  while(answerButtonElement.firstChild){
+    answerButtonElement.removeChild(answerButtonElement.firstChild);
+  }
+}
+function selectAnswer(e){
+  const selectedButton = e.target;
+  const correct = selectedButton.dataset.correct;
 
-//this function will display the start menu based onClick
+  nextSet();
+}
+
+//this function will display the next set of questions... IF THERE ARE ANY, otherwise show final page
 function nextSet(){
-  questionContainerElement.classList.add('hide');
-  answerButtonElement.classList.add('hide');
-  finalPage.classList.remove('hide');
+  if(shuffledQuestions.length > currentQuestionIndex + 1){
+      currentQuestionIndex ++;
+      setNextQuestion();
+      console.log(correct);
+  }else{
+    finalPage.classList.remove('hide');
+    questionElement.classList.add('hide');
+    answerButtonElement.classList.add('hide');
+  }
+
 }
 
 //function for the timer
