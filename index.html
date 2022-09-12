@@ -4,15 +4,44 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- BOOTSTRAP CSS ONLY CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
     <link rel="stylesheet" href="./assets/style.css">
     <title>API Interview Quiz</title>
 </head>
 <body>
-    <div class="navBar">
+    <nav class="navbar navColor">
         <div class="highScores">View high scores</div>
-        <div class="timeText">Time: <span class="timer"></span> </div>
+        <div class="timeText">Time:  <span class="timer"></span> </div>
+    </nav>
+    <div class="container">
+        <div class="mainMenu" id="mainMenu">
+            <h1>Coding Quiz Challenge</h1>
+            <p>Try to answer the following code-related questions within
+                the time limit. Keep in mind that incorrect answers will penalize
+                your score/time by ten seconds!
+            </p>
+        </div>
+        <div id="questionContainer" class="hide">
+            <h1 id="question">Questions</h1>
+        </div>
+        <div id="answerButtons" class="hide">
+            <!--
+            <button class="answerBtn" onclick="nextSet()">Answer 1</button>
+            <button class="answerBtn" onclick="nextSet()">Answer 2</button>
+            <button class="answerBtn" onclick="nextSet()">Answer 3</button>
+            <button class="answerBtn" onclick="nextSet()">Answer 4</button>
+            --> 
+        </div>
+        <div id="finalPage" class="finalPage hide">
+            <h1>All done!</h1>
+            <h3>Your final score is </h3>
+            <label for="initials">Enter Initials: </label>
+            <input type="text" class="intitialsTxt" id="intitialsTxt">
+            <hr>
+        </div>
+        <button class="buttonStart" id="btnStart" onclick="startQuiz()">Start Quiz</button> 
     </div>
-
 
     <script src="./assets/script.js"></script>
 </body>
