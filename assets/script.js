@@ -1,6 +1,7 @@
 // Selects the span tag that is for our timer
 var timer = document.querySelector(".timer");
 var secondsLeft = 91;
+let correctAnswers = 0;
 
 const startButton = document.getElementById("btnStart");
 const questionContainerElement = document.getElementById('questionContainer');
@@ -8,15 +9,18 @@ const mainMenu = document.getElementById('mainMenu');
 const finalPage = document.getElementById('finalPage');
 const questionElement = document.getElementById('question');
 const answerButtonElement = document.getElementById('answerButtons');
+const submitButton = document.getElementById('submitBtn');
+
 
 
 let shuffledQuestions, currentQuestionIndex;
-let response = document.getElementById("response");
+let response = document.getElementById('response');
 
 
 //             FUNCTIONS             //
 //this function will display the questions and answers based onClick
 function startQuiz(){
+  
   //hides start menu
   mainMenu.classList.add('hide');
   startButton.classList.add('hide');
@@ -42,39 +46,60 @@ function showQuestion(question){
   question.answers.forEach(answer => {
     const button = document.createElement('button');
     button.innerText = answer.text;
-    button.classList.add('answerBtn')
-  if(answer.correct){
-    //add code here
-    button.dataset.correct = answer.correct;
-  }
-  button.addEventListener('click', selectAnswer);
-  answerButtonElement.appendChild(button);
+    button.classList.add('answerBtn');
+    if(answer.correct){
+      button.dataset.correct = answer.correct;
+    }
+    button.addEventListener('click', selectedAnswer)
+    answerButtonElement.appendChild(button);
   });
 }
 //clears everything out
 function resetState(){
   while(answerButtonElement.firstChild){
+    answerButtonElement.removeAttribute('data-correct')
     answerButtonElement.removeChild(answerButtonElement.firstChild);
   }
 }
-function selectAnswer(e){
-  const selectedButton = e.target;
-  const correct = selectedButton.dataset.correct;
-
-  nextSet();
-}
-
+ 
 //this function will display the next set of questions... IF THERE ARE ANY, otherwise show final page
-function nextSet(){
+function nextSet(answer){
+  response.classList.remove('hide');
+  if(answer == 'true'){
+    correctAnswers++;
+    document.getElementById('lineBreak').classList.remove('hide');
+    response.innerHTML = "Correct!";
+  }else{
+    document.getElementById('lineBreak').classList.remove('hide');
+    response.innerHTML = "Wrong!";
+  }
+
   if(shuffledQuestions.length > currentQuestionIndex + 1){
       currentQuestionIndex ++;
       setNextQuestion();
-      console.log(correct);
   }else{
-    finalPage.classList.remove('hide');
-    questionElement.classList.add('hide');
-    answerButtonElement.classList.add('hide');
+    loadFinalPage();
   }
+}
+
+function selectedAnswer(e){
+  const selectedButton = e.target;
+  const answer = selectedButton.dataset.correct;
+  nextSet(answer);
+}
+
+function loadFinalPage(){
+  let finalScore = correctAnswers / shuffledQuestions.length;
+  finalScore = Math.round(finalScore * 100) / 100;
+ 
+  //console.log(shuffledQuestions.length)
+
+  document.getElementById('lineBreak').classList.add('hide');
+  finalPage.classList.remove('hide');
+  document.getElementById('finalScore').innerText = finalScore;
+  questionElement.classList.add('hide');
+  answerButtonElement.classList.add('hide');
+
 
 }
 

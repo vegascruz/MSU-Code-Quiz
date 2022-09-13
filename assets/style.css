@@ -63,7 +63,25 @@ body {
 .finalPage label{
     font-size: larger;
 }
-/*We will use this class to hide/un-hide certain elements*/
+.submitBtn{
+    background-color: darkblue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    height: 25%;
+    width: auto;
+    font-size: larger;
+    text-align: left;
+}
+.submitBtn:active{
+    background-color: blueviolet;
+}
+#response{
+    text-align: left;
+    font-size: larger;
+    color: gray;
+}
 .hide{
     display: none;
 }

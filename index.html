@@ -27,15 +27,17 @@
         </div>
         <div id="answerButtons" class="hide">
 
-            <div id="response"></div>
         </div>
         <div id="finalPage" class="finalPage hide">
             <h1>All done!</h1>
-            <h3>Your final score is </h3>
+            <h3>Your final score is <span id="finalScore"></span></h3>
             <label for="initials">Enter Initials: </label>
             <input type="text" class="intitialsTxt" id="intitialsTxt">
+            <button id="submitBtn" class="submitBtn">Submit</button>
             <hr>
         </div>
+        <hr id="lineBreak" class="hide">
+        <div id="response" class="hide"></div>
         <button class="buttonStart" id="btnStart" onclick="startQuiz()">Start Quiz</button> 
     </div>
 
