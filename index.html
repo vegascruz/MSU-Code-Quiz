@@ -32,9 +32,17 @@
             <h1>All done!</h1>
             <h3>Your final score is <span id="finalScore"></span></h3>
             <label for="initials">Enter Initials: </label>
-            <input type="text" class="intitialsTxt" id="intitialsTxt">
-            <button id="submitBtn" class="submitBtn">Submit</button>
+            <input type="text" class="intitialsTxt" id="initialsTxt">
+            <button id="submitBtn" class="submitBtn" onclick="submit()">Submit</button>
             <hr>
+        </div>
+        <div id="highScoresPage" class="hide">
+            <h1>High Scores</h1>
+            <select name="high schores list" id="highScoresList">
+
+            </select>
+            <button class="buttonHomePage" id="btnHomePage">Go Back</button>
+            <button class="buttonClear" id="btnClear">Clear high scores</button>
         </div>
         <hr id="lineBreak" class="hide">
         <div id="response" class="hide"></div>

@@ -12,9 +12,9 @@ const answerButtonElement = document.getElementById('answerButtons');
 const submitButton = document.getElementById('submitBtn');
 
 
-
 let shuffledQuestions, currentQuestionIndex;
 let response = document.getElementById('response');
+let initialsTxt;
 
 
 //             FUNCTIONS             //
@@ -66,7 +66,8 @@ function resetState(){
 function nextSet(answer){
   response.classList.remove('hide');
   if(answer == 'true'){
-    correctAnswers++;
+    //10 points for each answer correct
+    correctAnswers += 10;
     document.getElementById('lineBreak').classList.remove('hide');
     response.innerHTML = "Correct!";
   }else{
@@ -89,18 +90,26 @@ function selectedAnswer(e){
 }
 
 function loadFinalPage(){
-  let finalScore = correctAnswers / shuffledQuestions.length;
-  finalScore = Math.round(finalScore * 100) / 100;
- 
   //console.log(shuffledQuestions.length)
 
   document.getElementById('lineBreak').classList.add('hide');
   finalPage.classList.remove('hide');
-  document.getElementById('finalScore').innerText = finalScore;
+  document.getElementById('finalScore').innerText = correctAnswers + ".";
   questionElement.classList.add('hide');
   answerButtonElement.classList.add('hide');
 
+}
+function submit(){
+  showHighScores();
+  initialsTxt = document.getElementById('initialsTxt').value;
+  localStorage.setItem('score', correctAnswers);
+  localStorage.setItem('initials', initialsTxt);
+}
 
+function showHighScores(){
+  document.getElementById('response').classList.add('hide');
+  document.getElementById('highScoresPage').classList.remove('hide');
+  finalPage.classList.add('hide');
 }
 
 //function for the timer
