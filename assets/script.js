@@ -1,7 +1,8 @@
-// Selects the span tag that is for our timer
+//these variables below are all my data in which I grab from the html document
+//to manipulate. 
 var timer = document.querySelector(".timer");
-var secondsLeft = 91;
 let correctAnswers = 0;
+let secondsLeft = 0
 
 const startButton = document.getElementById("btnStart");
 const questionContainerElement = document.getElementById('questionContainer');
@@ -10,17 +11,23 @@ const finalPage = document.getElementById('finalPage');
 const questionElement = document.getElementById('question');
 const answerButtonElement = document.getElementById('answerButtons');
 const submitButton = document.getElementById('submitBtn');
-
+const highScoresPage = document.getElementById('highScoresPage');
+const highScoresList = document.getElementById('highScoresList');
+const highScoresLink = document.getElementById('highScoresLink');
 
 let shuffledQuestions, currentQuestionIndex;
 let response = document.getElementById('response');
 let initialsTxt;
 
+let highScores = JSON.parse(localStorage.getItem("highScores")) || [];
 
-//             FUNCTIONS             //
+
+              //             FUNCTIONS             //
+
 //this function will display the questions and answers based onClick
 function startQuiz(){
-  
+  secondsLeft = 61;
+  correctAnswers = 0;
   //hides start menu
   mainMenu.classList.add('hide');
   startButton.classList.add('hide');
@@ -54,6 +61,7 @@ function showQuestion(question){
     answerButtonElement.appendChild(button);
   });
 }
+
 //clears everything out
 function resetState(){
   while(answerButtonElement.firstChild){
@@ -70,11 +78,12 @@ function nextSet(answer){
     correctAnswers += 10;
     document.getElementById('lineBreak').classList.remove('hide');
     response.innerHTML = "Correct!";
-  }else{
+  }else{//however many seconds off the clock
+    secondsLeft -= 30;
     document.getElementById('lineBreak').classList.remove('hide');
     response.innerHTML = "Wrong!";
   }
-
+//while there are still array questions, setNextQuestion() will run... else. The final page will load
   if(shuffledQuestions.length > currentQuestionIndex + 1){
       currentQuestionIndex ++;
       setNextQuestion();
@@ -83,51 +92,161 @@ function nextSet(answer){
   }
 }
 
+//where our answer is being saved
 function selectedAnswer(e){
   const selectedButton = e.target;
   const answer = selectedButton.dataset.correct;
   nextSet(answer);
 }
 
+//this will load the final submit page
 function loadFinalPage(){
-  //console.log(shuffledQuestions.length)
-
+  document.getElementById('initialsTxt').value = '';
+  secondsLeft = 0;
+  timer.textContent = "";
   document.getElementById('lineBreak').classList.add('hide');
   finalPage.classList.remove('hide');
   document.getElementById('finalScore').innerText = correctAnswers + ".";
-  questionElement.classList.add('hide');
+  questionContainerElement.classList.add('hide');
   answerButtonElement.classList.add('hide');
 
 }
-function submit(){
-  showHighScores();
-  initialsTxt = document.getElementById('initialsTxt').value;
-  localStorage.setItem('score', correctAnswers);
-  localStorage.setItem('initials', initialsTxt);
+
+//this function won't PHYSICALLY allow special chars, spaces and numbers in our initialsTxt
+function onlyLetters(key) {
+  var keycode = (key.which) ? key.which : key.keyCode;
+
+  if ((keycode > 64 && keycode < 91) || (keycode > 96 && keycode < 123))  
+  {     
+         return true;    
+  }
+  else
+  {
+      return false;
+  }
+       
 }
 
+//this will submit your score after the click event. Value is only 3 chars(set on the index page)
+//if initials is blank, submit won't run. Everything is being saved/run in local storage.
+function submit(){
+  initialsTxt = document.getElementById('initialsTxt').value.toString();
+  if(initialsTxt == ""){
+    response.innerHTML = "Initials can't be blank"
+  }
+  else{
+      initialsTxt = initialsTxt.toUpperCase();
+      localStorage.setItem("recentInitials", initialsTxt);
+
+      localStorage.setItem("mostRecentScore", correctAnswers);
+      let mostRecentScore = localStorage.getItem("mostRecentScore");
+
+      const score = {
+        score: mostRecentScore,
+        name: initialsTxt
+      };
+
+      highScores.push(score);
+      highScores = highScores.sort(function (a, b) {  return b.score - a.score;  });
+
+      highScores.splice(5);
+      console.log(highScores);
+
+      localStorage.setItem("highScores", JSON.stringify(highScores));
+
+      showHighScores();
+  }
+}
+
+//this will show the high scores page. In so doing, you need to append all the scores from the 
+//highScores array into the select drop down box
 function showHighScores(){
-  document.getElementById('response').classList.add('hide');
-  document.getElementById('highScoresPage').classList.remove('hide');
+  //this hides the high scores link if the user is already on the page
+  highScoresLink.classList.add('hide');
+  highScoresPage.classList.remove('hide');
+
+  //if any of these pages are active, these if statements will remove them so only the high scores page shoes
+  if(!document.getElementById('lineBreak').classList.contains('hide')){
+    document.getElementById('lineBreak').classList.add('hide');
+  }
+  if(!response.classList.contains('hide')){
+    response.classList.add('hide');
+  }
+  if(!finalPage.classList.contains('hide')){
+    finalPage.classList.add('hide');
+  }
+  if(!questionContainerElement.classList.contains('hide')){
+    questionContainerElement.classList.add('hide');
+  }
+  if(!answerButtonElement.classList.contains('hide')){
+    answerButtonElement.classList.add('hide');
+  }
+  if(!mainMenu.classList.contains('hide')){
+    mainMenu.classList.add('hide');
+  }
+  if(!startButton.classList.contains('hide')){
+    startButton.classList.add('hide');
+  }
+
+  initialsTxt.innerHTML = '';
+  highScoresList.innerHTML = "";
+
+  for(var i = 0; i < highScores.length; i++) {
+    var highScore = highScores[i];
+    var el = document.createElement('option');
+    el.textContent = (i + 1) + ". " + highScore.name + " - " + highScore.score;
+    el.value = highScore.score;
+    highScoresList.appendChild(el);
+  }
+  response.classList.add('hide');
   finalPage.classList.add('hide');
+}
+
+//this will send you back to the start page
+function goBack(){
+  mainMenu.classList.remove('hide');
+  highScoresLink.classList.remove('hide');
+  highScoresPage.classList.add('hide');
+  startButton.classList.remove('hide');  
+}
+
+//this will run when the clear scores button is clicked
+function clearHighScores(){
+  localStorage.clear();
+  highScores = [];
+
+  highScoresList.innerHTML = "";
 }
 
 //function for the timer
 function setTime() {
-  // Sets interval in variable
-  var timerInterval = setInterval(function() {
-    secondsLeft--;
-    timer.textContent = secondsLeft;
+    // Sets interval in variable
+    var timerInterval = setInterval(function() {
+      timer.innerText = secondsLeft;
+      secondsLeft--;
 
-    if(secondsLeft === 0) {
-      // Stops execution of action at set interval
-      clearInterval(timerInterval);
-      // Calls function to create and append image
-    }
+      //if the finalPage element contains the class called hide ANNNNNND the seconds left are less than 0
+      //we will load the final page and set the response to 'ran out of time'
+      //else if the page is already loaded
+      if(secondsLeft <= 0 && finalPage.classList.contains('hide')){
+        clearInterval(timerInterval);
+        loadFinalPage();
+        response.innerHTML = "Ran out of time!";
+      }
 
-  }, 1000);
+      if(!finalPage.classList.contains('hide')){
+        timer.innerText = "";
+        clearInterval(timerInterval);
+      }
+
+      if(!highScoresPage.classList.contains('hide')){
+        timer.innerText = "";
+        clearInterval(timerInterval);
+      }
+
+    }, 1000);
+
 }
-//setTime();  WE WILL USE THIS ONCE THE USER CLICKS 'START QUIZ'
 
 //this is my array of questions and answers: only 3 based on the mockup
 const questions = [

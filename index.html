@@ -11,7 +11,7 @@
 </head>
 <body>
     <nav class="navbar navColor">
-        <div class="highScores">View high scores</div>
+        <p class="highScores" id="highScoresLink" onclick="showHighScores()">View high scores</p>
         <div class="timeText">Time:  <span class="timer"></span> </div>
     </nav>
     <div class="container">
@@ -32,7 +32,7 @@
             <h1>All done!</h1>
             <h3>Your final score is <span id="finalScore"></span></h3>
             <label for="initials">Enter Initials: </label>
-            <input type="text" class="intitialsTxt" id="initialsTxt">
+            <input type="text" class="intitialsTxt" id="initialsTxt" maxlength="3" size="3" onkeypress="return onlyLetters(event)">
             <button id="submitBtn" class="submitBtn" onclick="submit()">Submit</button>
             <hr>
         </div>
@@ -41,9 +41,9 @@
             <select name="high schores list" id="highScoresList">
 
             </select>
-            <button class="buttonHomePage" id="btnHomePage">Go Back</button>
-            <button class="buttonClear" id="btnClear">Clear high scores</button>
-        </div>
+            <button class="buttonHomePage" id="btnHomePage" onclick="goBack()">Go Back</button>
+            <button class="buttonClear" id="btnClear" onclick="clearHighScores()">Clear high scores</button>
+        </div> 
         <hr id="lineBreak" class="hide">
         <div id="response" class="hide"></div>
         <button class="buttonStart" id="btnStart" onclick="startQuiz()">Start Quiz</button> 
