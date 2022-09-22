@@ -25,12 +25,9 @@ body {
     text-align: center;
     /*padding-left: 20%;*/
 }
-.mainMenu h1{
-    font-size: 55px;
-}
 .container p{
     font-family: 'Times New Roman', Times, serif;
-    font-size: x-large;
+    font-size: 28px;
 }
 .container button{
     background-color: darkblue;
@@ -42,6 +39,9 @@ body {
 .container button:active{
     background-color: blueviolet;
 }
+.mainMenu h1{
+    font-size: 55px;
+}
 .buttonStart{
     height: 25%;
     width: 25%;
@@ -52,8 +52,8 @@ body {
 }
 .answerBtn{
     height: 25%;
-    width: 35%;
-    font-size: 25px;
+    width: 50%;
+    font-size: 24px;
     display: block;
     margin-bottom: 1%;
     text-align: left;
@@ -94,11 +94,59 @@ body {
 }
 
 /*DIFFERENT SIZE SCREENS*/
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 1000px) {
+    .mainMenu h1{
+        font-size: 40px;
+    }
     .container{
         width: 100%;
     }
+    .container p{
+        font-size: 24px;
+    }
+    #questionContainer{
+        font-size: 24px;
+    }
+    .answerBtn{
+        font-size: 20px;
+        width: 60%;
+    }
+    #response{
+        width: 60%;
+        font-size: 26px;
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+    .mainMenu h1{
+        font-size: 34px;
+    }
+    .container{
+        width: 100%;
+    }
+    .container p{
+        font-size: 20px;
+    }
+    .buttonStart{
+        font-size: 20px;
+    }
+    #questionContainer{
+        font-size: 20px;
+    }
+    .answerBtn{
+        width: 80%;
+        font-size: 18px;
+    }
+    #response{
+        font-size: 24px;
+    }
     #highScoresPage select{
+        width: 100%;
+    }
+  }
+
+  @media only screen and (max-width: 400px){
+    .answerBtn{
         width: 100%;
     }
   }

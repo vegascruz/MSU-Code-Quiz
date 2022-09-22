@@ -1,7 +1,7 @@
 //these variables below are all my data in which I grab from the html document
 //to manipulate. 
 var timer = document.querySelector(".timer");
-let correctAnswers = 0;
+let finalScore = 0;
 let secondsLeft = 0
 
 const startButton = document.getElementById("btnStart");
@@ -17,7 +17,7 @@ const highScoresLink = document.getElementById('highScoresLink');
 
 let shuffledQuestions, currentQuestionIndex;
 let response = document.getElementById('response');
-let initialsTxt;
+let initialsTxt = "";
 
 let highScores = JSON.parse(localStorage.getItem("highScores")) || [];
 
@@ -27,7 +27,7 @@ let highScores = JSON.parse(localStorage.getItem("highScores")) || [];
 //this function will display the questions and answers based onClick
 function startQuiz(){
   secondsLeft = 61;
-  correctAnswers = 0;
+  finalScore = 0;
   //hides start menu
   mainMenu.classList.add('hide');
   startButton.classList.add('hide');
@@ -75,7 +75,7 @@ function nextSet(answer){
   response.classList.remove('hide');
   if(answer == 'true'){
     //10 points for each answer correct
-    correctAnswers += 10;
+    secondsLeft += 10;
     document.getElementById('lineBreak').classList.remove('hide');
     response.innerHTML = "Correct!";
   }else{//however many seconds off the clock
@@ -101,12 +101,13 @@ function selectedAnswer(e){
 
 //this will load the final submit page
 function loadFinalPage(){
+  finalScore = secondsLeft;
   document.getElementById('initialsTxt').value = '';
   secondsLeft = 0;
   timer.textContent = "";
   document.getElementById('lineBreak').classList.add('hide');
   finalPage.classList.remove('hide');
-  document.getElementById('finalScore').innerText = correctAnswers + ".";
+  document.getElementById('finalScore').innerText = finalScore + ".";
   questionContainerElement.classList.add('hide');
   answerButtonElement.classList.add('hide');
 
@@ -134,11 +135,14 @@ function submit(){
   if(initialsTxt == ""){
     response.innerHTML = "Initials can't be blank"
   }
+  else if(initialsTxt.length < 2){
+    response.innerHTML = "Initials has to be more than 1 letter";
+  }
   else{
       initialsTxt = initialsTxt.toUpperCase();
       localStorage.setItem("recentInitials", initialsTxt);
 
-      localStorage.setItem("mostRecentScore", correctAnswers);
+      localStorage.setItem("mostRecentScore", finalScore);
       let mostRecentScore = localStorage.getItem("mostRecentScore");
 
       const score = {
@@ -207,6 +211,8 @@ function goBack(){
   mainMenu.classList.remove('hide');
   highScoresLink.classList.remove('hide');
   highScoresPage.classList.add('hide');
+  response.classList.add('hide');
+  document.getElementById('lineBreak').classList.add('hide');
   startButton.classList.remove('hide');  
 }
 
@@ -216,6 +222,10 @@ function clearHighScores(){
   highScores = [];
 
   highScoresList.innerHTML = "";
+  
+  document.getElementById('lineBreak').classList.remove('hide');
+  response.classList.remove('hide');
+  response.innerHTML = "Scores Cleared!";
 }
 
 //function for the timer
@@ -229,6 +239,7 @@ function setTime() {
       //we will load the final page and set the response to 'ran out of time'
       //else if the page is already loaded
       if(secondsLeft <= 0 && finalPage.classList.contains('hide')){
+        finalScore = 0;
         clearInterval(timerInterval);
         loadFinalPage();
         response.innerHTML = "Ran out of time!";
@@ -275,6 +286,24 @@ const questions = [
       {text: '2. terminal/bash', correct: false},
       {text: '3. for loops', correct: false},
       {text: '4. console.log', correct: true}
+    ]
+  },
+  {
+    question: "Which of the following function of String object splits a String object into an array of strings by separating the string into substrings?",
+    answers:[
+      {text: '1. slice()', correct: false},
+      {text: '2. split()', correct: true},
+      {text: '3. replace()', correct: false},
+      {text: '4. search()', correct: false}
+    ]
+  },
+  {
+    question: "Which of the following function of Array object adds one or more elements to the front of an array and returns the new length of the array?",
+    answers:[
+      {text: '1. unshift()', correct: true},
+      {text: '2. sort()', correct: false},
+      {text: '3. splice()', correct: false},
+      {text: '4. toString()', correct: false}
     ]
   }
 ]
